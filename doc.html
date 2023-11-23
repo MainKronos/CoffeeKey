@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+	</head>
+	<body>
+		<style>
+			body{
+				background-color: black;
+				color: lightgrey;
+			}
+			code{
+				font-size: 3em;
+				text-align: center;
+			}
+			span{
+				color: orange;
+			}
+
+		</style>
+
+
+		<code></code>
+	</body>
+
+	<script>
+
+		class Decode{
+
+			info = {
+				money: {
+					color: "yellow",
+					info: "Numero di centesimi registrati."
+				},
+				n_money: {
+					color: "orange",
+					info: "Valore di `money` negato bit a bit."
+				},
+				adr: {
+					color: "blue",
+					info: "Valore address. Rimane costante a 0."
+				},
+				n_adr: {
+					color: "aqua",
+					info: "Valore di `adr` negato bit a bit."
+				},
+				last_tr_money: {
+					color: "BlueViolet",
+					info: "Numero di centesimi traferiti nell'ultima transazione."
+				},
+				last_tr_sign: {
+					color: "CornflowerBlue",
+					info: "Segno + o - dell'ultima transazione. (01 = +, 02 = -)"
+				},
+				num_in: {
+					color: "Lime",
+					info: "Numero di volte che è stata inserita la chiavetta ed è stata eseguita almeno una transazione."
+				},
+				unknown_tr: {
+					color: "DarkSalmon",
+					info: "Timestamp? ultima transazione."
+				},
+				unknown_tr_in: {
+					color: "Chocolate",
+					info: "Timetamp? ultima transazione di ricarica."
+				},
+				key_a: {
+					color: "green",
+					info: "Chiave A."
+				},
+				key_b: {
+					color: "greenyellow",
+					info: "Chiave B."
+				},
+				cr: {
+					color: "LightCoral",
+					info: "Valore dei permessi di lettura/scrittura."
+				},
+				unknown: {
+					color: "GhostWhite",
+					info: "Valore sconosciuto."
+				},
+				const_unknown: {
+					color: "PaleGoldenRod",
+					info: "Valore costante sconosciuto."
+				}
+			}
+ 
+			parse = [
+				[
+					{money: 4},
+					{n_money: 4},
+					{money: 4},
+					{adr: 1},
+					{n_adr: 1},
+					{adr: 1},
+					{n_adr: 1},
+				],[
+					{unknown: 4},
+					{last_tr_money: 4},
+					{last_tr_sign: 1},
+					{num_in: 3},
+					{unknown_tr: 4},
+				],[
+					{unknown_tr_in: 4},
+					{const_unknown: 12},
+				],[
+					{key_a: 6},
+					{cr: 4},
+					{key_b: 6}
+				]
+			]
+
+			/**
+			 * @param {!string[]} data
+			 * 
+			 */
+			constructor(data){
+				this.data = data;
+				this.render();
+			}
+
+			render(){
+
+				const code = document.getElementsByTagName("code")[0];
+
+				for(let i=0; i<this.data.length; i++){
+					const block = this.data[i];
+
+					const div = document.createElement("div");
+
+					let j=0;
+					for(let inf of this.parse[i]){
+						let name = Object.keys(inf)[0];
+						let len = inf[name];
+
+						let value = block.substring(j,j+len*2);
+
+						const span = document.createElement("span");
+						span.appendChild(document.createTextNode(value));
+						span.title = name;
+						span.style.color = this.info[name].color;
+						span.onclick = () => alert(`## ${name}\n${this.info[name].info}`)
+
+						div.appendChild(span);
+
+						j+=len*2;
+					}
+					code.appendChild(div);
+				}
+			}
+		}
+
+		
+
+		new Decode([
+			"05000000FAFFFFFF0500000000FF00FF",
+			"F278010064000000026B0000D39660AB",
+			"D09460AB005C08997819000000000000",
+			"123456789ABCFF078069123456789ABC"
+		]);
+	</script>
+</html>
