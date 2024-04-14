@@ -1,0 +1,3 @@
+[submodule "mfcuk"]
+	path = mfcuk
+	url = https://github.com/DrSchottky/mfcuk.git
